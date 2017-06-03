@@ -1,23 +1,38 @@
-int main(string[] args) {
-    Gtk.init(ref args);
+public class MyApp : Gtk.Application { 
+    public MyApp() {
+        Object (application_id: "com.github.ascuns05.flappy",
+        flags: ApplicationFlags.FLAGS_NONE);
+    }
 
-    var window = new Gtk.Window();
-    window.title = "Привет мир!";
-    window.set_border_width(12);
-    window.set_position(Gtk.WindowPosition.CENTER);
-    window.set_default_size(350,70);
-    window.destroy.connect(Gtk.main_quit);
+    protected override void activate () {
+        var app_window = new Gtk.ApplicationWindow (this);
 
-    var button_hello = new Gtk.Button.with_label("Нажми на меня!");
-    button_hello.clicked.connect(() => {
-        button_hello.label = "Привет мир!";
-        button_hello.set_sensitive(false);
-    });
+        var grid = new Gtk.Grid ();
+        grid.orientation = Gtk.Orientation.VERTICAL;
+        grid.row_spacing = 12;
 
-    window.add(button_hello);
-    window.show_all();
+        var title_label = new Gtk.Label ("Notifications");
+        var show_button = new Gtk.Button.with_label ("Show");
 
-    Gtk.main();
-    return 0;
+        grid.add (title_label);
+        grid.add (show_button);
+        
+        app_window.add (grid);
+        app_window.show_all ();
 
+        show_button.clicked.connect (() => {
+            var notification = new Notification ("Hello World");
+            var image = new Gtk.Image.from_icon_name ("dialog-warning", Gtk.IconSize.DIALOG);
+            notification.set_icon (image.gicon);
+            notification.set_body ("This is my first notifications");
+            this.send_notification ("notify.app", notivalafication);
+        });
+
+        app_window.show ();
+    }
+
+    public static int main (string[] args) {
+        var app = new MyApp ();
+        return app.run (args);
+    }
 }
